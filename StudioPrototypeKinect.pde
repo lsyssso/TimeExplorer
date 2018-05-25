@@ -3,7 +3,8 @@ import KinectPV2.*;
 
 int MSG_WIDTH = 0;
 int MSG_HEIGHT = 1;
-int MSG_OPEN_HEIGHT = 2;
+int MSG_OPEN_WIDTH = 2;
+int MSG_OPEN_HEIGHT = 3;
 int MAX_DISPLAY_NO = 4;
 //int FALLINGSPEED = 2;
 int LETTER_TEXT_X = 40;
@@ -14,8 +15,9 @@ int LETTER_LINE_LENGTH = 23;
 int POSTCARD_LINE_LENGTH = 17;
 int POSTCARD_TEXT_X = 30;
 int POSTCARD_TEXT_Y = 100;
-int[][] MSG_SIZE = new int[][]{new int[]{372, 270, 593}, new int[]{362, 213, 596}, new int[]{374, 241, 241}};
-int[][] SPAWN_LOC = new int[][]{new int[]{500, 300}, new int[]{1500, 500}, new int[]{1000, 700}, new int[]{100, 200}};
+int HAND_ICON_SIZE = 70;
+int[][] MSG_SIZE = new int[][]{new int[]{186, 135, 372, 593}, new int[]{181, 106, 362, 596}, new int[]{187, 120, 374, 241}};
+int[][] SPAWN_LOC = new int[][]{new int[]{600, 300}, new int[]{1500, 500}, new int[]{1000, 700}, new int[]{200, 200}};
 String GRAPHICS_DIRECTORY = "graphics/";
 
 int spawnLocController = 0;
@@ -26,7 +28,8 @@ ArrayList<Message> detectionPoints = new ArrayList<Message>();
 boolean displayCapture = false;
 boolean displayDetectionBoundary = false;
 String mouseLoc;
-
+PImage bubble;
+PImage[] hands = new PImage[3];
 KinectPV2 kinect;
 
 
@@ -42,7 +45,10 @@ void setup()
   kinect.enableColorImg(true);
   kinect.init();
   loadVisuals();
-  
+  bubble = loadAndResize(GRAPHICS_DIRECTORY + "bubble.png", 200, 200);
+  hands[0] = loadAndResize(GRAPHICS_DIRECTORY + "hand0.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
+  hands[1] = loadAndResize(GRAPHICS_DIRECTORY + "hand1.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
+  hands[2] = loadAndResize(GRAPHICS_DIRECTORY + "hand2.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
   loadMessages();
 }
 
@@ -55,10 +61,17 @@ void draw()
   
   
   //println(faces.length);
-  int[] location;
+  int[] rightHandLoc;
+  int[] leftHandLoc;
   ArrayList<KSkeleton> skeletonArray =  kinect.getSkeletonColorMap();
+  if(skeletonArray.size() > 3)
+  {
+    skeletonArray = new ArrayList(skeletonArray.subList(0, 3));
+  }
   KJoint[] joints;
-  KJoint hand;
+  KJoint rightHand;
+  KJoint leftHand;
+  renderBackground();
   if(displayDetectionBoundary)
   {
     noFill();
@@ -69,19 +82,34 @@ void draw()
       rect(d.range[0], d.range[2], d.range[1] - d.range[0], d.range[3] - d.range[2]);
     }
   }
+  image(bubble, 0, height - 200);
+  fill(0);
+  text("Try waving \nyour hand!", 20, height - 150);
+  renderMessages();
+  float rightX;
+  float leftX;
+  float rightY;
+  float leftY;
   for(Message d : detectionPoints)
   {
     for (int i = 0; i < skeletonArray.size(); i++) {
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
       if (skeleton.isTracked()) {
         joints = skeleton.getJoints();
-        hand = joints[KinectPV2.JointType_HandTipRight];
+        rightHand = joints[KinectPV2.JointType_HandTipRight];
+        leftHand = joints[KinectPV2.JointType_HandTipLeft];
         color col  = skeleton.getIndexColor();
         fill(col);
         stroke(col);
-        location = new int[]{int(hand.getX()), int(hand.getY())};
-        drawJoint(joints, KinectPV2.JointType_HandTipRight); //<>//
-        if(isBetween(d.range, location))
+        rightX = map(rightHand.getX(), 360, 1600, 0, 1900);
+        leftX = map(leftHand.getX(), 360, 1600, 0, 1900);
+        rightY = rightHand.getY();
+        leftY = leftHand.getY();
+        rightHandLoc = new int[]{int(rightX), int(rightY)};
+        leftHandLoc = new int[]{int(leftX), int(leftY)};
+        drawJoint(rightX, rightY, i, true); //<>//
+        drawJoint(leftX, leftY, i, false);
+        if(isBetween(d.range, rightHandLoc) || isBetween(d.range, leftHandLoc))
         {
           d.switchImg();
         }
@@ -89,7 +117,7 @@ void draw()
     }
   }
   
-  renderAll();
+  
   if(displayCapture)
   {
     image(kinect.getColorImage(), width - width/4, height - height/4, width/4, height/4);
@@ -113,7 +141,7 @@ boolean isBetween(int[] range, int[] location)
   }
 }
 
-void renderAll()
+void renderBackground()
 {
   for(Drawable d : visualElements)
   {
@@ -121,10 +149,22 @@ void renderAll()
   }
 }
 
-void drawJoint(KJoint[] joints, int jointType) {
+void renderMessages()
+{
+  for(Message m : detectionPoints)
+  {
+    m.render();
+  }
+}
+
+void drawJoint(float x, float y, int index, boolean isRightHand) {
   pushMatrix();
-  translate(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
-  ellipse(0, 0, 25, 25);
+  translate(x, y);
+  if(isRightHand)
+  {
+    scale(-1, 1);
+  }
+  image(hands[index], 0, 0);
   popMatrix();
 }
 
@@ -143,7 +183,7 @@ void loadMessages()
 {
   try
   {
-    String[] lines = loadStrings("http://localhost:1234");
+    String[] lines = loadStrings("http://localhost:1234/get");
     for(String s : lines)
     {
       createMessage(s);
@@ -163,6 +203,7 @@ void createMessage(String s)
   int msgtype = msg.getInt("msgtype");
   int newMsgWidth = MSG_SIZE[msgtype][MSG_WIDTH];
   int newMsgHeight =  MSG_SIZE[msgtype][MSG_HEIGHT];
+  int newMsgOpenWidth = MSG_SIZE[msgtype][MSG_OPEN_WIDTH];
   int newMsgOpenHeight = MSG_SIZE[msgtype][MSG_OPEN_HEIGHT];
   String newMsgCover =  GRAPHICS_DIRECTORY + msg.getString("cover");
   String newMsgMsg = msg.getString("message");
@@ -196,12 +237,12 @@ void createMessage(String s)
     textY = POSTCARD_TEXT_Y;
   }
   newMsgCover += ".png";
-  Message newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(1, 4)), newMsgFrom, textX, textY);
+  Message newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 13)), newMsgFrom, textX, textY);
   newMsg.breakText(newMsgLineLength);
   newMsg.addDrawable(new Drawable(spawnLocX, spawnLocY, 0, newMsgWidth, newMsgHeight, newMsgCover));
-  newMsg.addDrawable(new Drawable(spawnLocX, spawnLocY, 0, newMsgWidth, newMsgOpenHeight, newMsgBack));
+  newMsg.addDrawable(new Drawable(spawnLocX, spawnLocY, 0, newMsgOpenWidth, newMsgOpenHeight, newMsgBack));
   detectionPoints.add(newMsg);
-  visualElements.add(newMsg);
+  //visualElements.add(newMsg);
   spawnLocController += 1;
 }
 
@@ -215,4 +256,11 @@ public void keyPressed()
   {
     displayDetectionBoundary = !displayDetectionBoundary;
   }
+}
+
+PImage loadAndResize(String directory, int newWidth, int newHeight)
+{
+  PImage newImage = loadImage(directory);
+  newImage.resize(newWidth, newHeight);
+  return newImage;
 }

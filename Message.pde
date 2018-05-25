@@ -71,6 +71,7 @@ public class Message extends Drawable
     }
     else
     {
+      resetDetectionArea();
       move();
       images.get(0).render();
       if(transforming == 2)
@@ -96,13 +97,14 @@ public class Message extends Drawable
   
   public void switchImg()
   {
-    if(status < 200)
+    if(status < 10)
     {
       if(status == 0)
       {
         transforming = 1;
       }
-      status = 200;
+      status = 10;
+      enlargeDetectionArea();
     }
   }
   
@@ -121,8 +123,15 @@ public class Message extends Drawable
     this.message = newString;
   }
   
-  public void reset()
+  private void enlargeDetectionArea()
   {
-    this.imgIndex = 0;
+    range[3] = range[2] + images.get(1).sizeHeight;
+    range[1] = range[0] + images.get(1).sizeWidth;
+  }
+  
+  private void resetDetectionArea()
+  {
+    range[3] = range[2] + images.get(0).sizeHeight;
+    range[1] = range[0] + images.get(0).sizeWidth;
   }
 }
