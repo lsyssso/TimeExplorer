@@ -5,6 +5,7 @@ int MSG_WIDTH = 0;
 int MSG_HEIGHT = 1;
 int MSG_OPEN_WIDTH = 2;
 int MSG_OPEN_HEIGHT = 3;
+int MAX_PLAYER_NUMBER =3;
 int MAX_DISPLAY_NO = 4;
 //int FALLINGSPEED = 2;
 int LETTER_TEXT_X = 40;
@@ -19,6 +20,7 @@ int HAND_ICON_SIZE = 70;
 int[][] MSG_SIZE = new int[][]{new int[]{186, 135, 372, 593}, new int[]{181, 106, 362, 596}, new int[]{187, 120, 374, 241}};
 int[][] SPAWN_LOC = new int[][]{new int[]{600, 300}, new int[]{1500, 500}, new int[]{1000, 700}, new int[]{200, 200}};
 String GRAPHICS_DIRECTORY = "graphics/";
+String URL = "http://209.97.175.95:8081";
 
 int spawnLocController = 0;
 
@@ -63,11 +65,18 @@ void draw()
   //println(faces.length);
   int[] rightHandLoc;
   int[] leftHandLoc;
-  ArrayList<KSkeleton> skeletonArray =  kinect.getSkeletonColorMap();
-  if(skeletonArray.size() > 3)
+  ArrayList<KSkeleton> skeletonArrayAll =  kinect.getSkeletonColorMap();
+  ArrayList<KSkeleton> skeletonArray = new ArrayList<KSkeleton>();
+  int numberOfPlayers = MAX_PLAYER_NUMBER;
+  if(skeletonArrayAll.size() <= 3)
   {
-    skeletonArray = new ArrayList(skeletonArray.subList(0, 3));
+    numberOfPlayers = skeletonArrayAll.size();
   }
+  for(int i = 0; i < numberOfPlayers; i++)
+  {
+    skeletonArray.add(skeletonArrayAll.remove(skeletonArrayAll.size() - 1));
+  }
+
   KJoint[] joints;
   KJoint rightHand;
   KJoint leftHand;
@@ -122,9 +131,9 @@ void draw()
   {
     image(kinect.getColorImage(), width - width/4, height - height/4, width/4, height/4);
   }
-  fill(255);
-  mouseLoc = mouseX + ", " + mouseY;
-  text(mouseLoc, mouseX, mouseY);
+  //fill(255);
+  //mouseLoc = mouseX + ", " + mouseY;
+  //text(mouseLoc, mouseX, mouseY);
   //println(frameRate);
 }
 
@@ -183,7 +192,7 @@ void loadMessages()
 {
   try
   {
-    String[] lines = loadStrings("http://localhost:1234/get");
+    String[] lines = loadStrings(URL);
     for(String s : lines)
     {
       createMessage(s);
@@ -237,7 +246,7 @@ void createMessage(String s)
     textY = POSTCARD_TEXT_Y;
   }
   newMsgCover += ".png";
-  Message newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 13)), newMsgFrom, textX, textY);
+  Message newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 10)), newMsgFrom, textX, textY);
   newMsg.breakText(newMsgLineLength);
   newMsg.addDrawable(new Drawable(spawnLocX, spawnLocY, 0, newMsgWidth, newMsgHeight, newMsgCover));
   newMsg.addDrawable(new Drawable(spawnLocX, spawnLocY, 0, newMsgOpenWidth, newMsgOpenHeight, newMsgBack));
