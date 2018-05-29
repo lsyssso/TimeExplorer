@@ -21,7 +21,7 @@ int[][] MSG_SIZE = new int[][]{new int[]{186, 135, 372, 593}, new int[]{181, 106
 int[][] SPAWN_LOC = new int[][]{new int[]{600, 300}, new int[]{1500, 500}, new int[]{1000, 700}, new int[]{200, 200}};
 String GRAPHICS_DIRECTORY = "graphics/";
 String URL = "http://209.97.175.95:8081";
-
+String[] ENVELOPE_STYLE = new String[]{"Ivory", "Yellow", "Pink"};
 int spawnLocController = 0;
 
 ArrayList<Message> messageBuffer = new ArrayList<Message>();
@@ -235,17 +235,19 @@ void createMessage(String s)
   if(msgtype == 0 || msgtype == 1)
   {
     newMsgLineLength = LETTER_LINE_LENGTH;
-    newMsgBack = newMsgCover + "-open.png";
+    
     if(msgtype == 0)
     {
       textX = LETTER_TEXT_X;
       textY = LETTER_TEXT_Y;
+      newMsgCover = ENVELOPE_STYLE[int(random(0, 3))];
     }
     else
     {
       textX = OLD_LETTER_TEXT_X;
       textY = OLD_LETTER_TEXT_Y;
     }
+    newMsgBack = newMsgCover + "-open.png";
     newMsgCover += ".png";
     newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 10)), newMsgFrom, textX, textY);
   }
