@@ -240,7 +240,7 @@ void createMessage(String s)
     {
       textX = LETTER_TEXT_X;
       textY = LETTER_TEXT_Y;
-      newMsgCover = ENVELOPE_STYLE[int(random(0, 3))];
+      newMsgCover = GRAPHICS_DIRECTORY + ENVELOPE_STYLE[int(random(0, 3))];
     }
     else
     {
