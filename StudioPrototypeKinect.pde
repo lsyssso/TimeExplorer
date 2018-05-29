@@ -20,7 +20,7 @@ int HAND_ICON_SIZE = 70;
 int[][] MSG_SIZE = new int[][]{new int[]{186, 135, 372, 593}, new int[]{181, 106, 362, 596}, new int[]{187, 120, 374, 241}};
 int[][] SPAWN_LOC = new int[][]{new int[]{600, 300}, new int[]{1500, 500}, new int[]{1000, 700}, new int[]{200, 200}};
 String GRAPHICS_DIRECTORY = "graphics/";
-String URL = "http://209.97.175.95:8081";
+String URL = "http://209.97.175.95:8082";
 String[] ENVELOPE_STYLE = new String[]{"Ivory", "Yellow", "Pink"};
 int spawnLocController = 0;
 
@@ -55,7 +55,7 @@ void setup()
   hands[2] = loadAndResize(GRAPHICS_DIRECTORY + "hand2.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
   loadMessages();
   loadFromBuffer();
-  thread("checkUpdate");
+  //thread("checkUpdate");
 }
 
 
@@ -104,6 +104,7 @@ void draw()
   float leftX;
   float rightY;
   float leftY;
+ 
   for(Message d : detectionPoints)
   {
     for (int i = 0; i < skeletonArray.size(); i++) {
@@ -121,8 +122,8 @@ void draw()
         leftY = leftHand.getY();
         rightHandLoc = new int[]{int(rightX), int(rightY)};
         leftHandLoc = new int[]{int(leftX), int(leftY)};
-        drawJoint(rightX, rightY, i, true); //<>//
-        drawJoint(leftX, leftY, i, false);
+        drawJoint(rightX, rightY, i, true);
+        drawJoint(leftX, leftY, i, false); //<>//
         if(isBetween(d.range, rightHandLoc) || isBetween(d.range, leftHandLoc))
         {
           d.switchImg();
@@ -184,6 +185,33 @@ void drawJoint(float x, float y, int index, boolean isRightHand) {
 
 void loadVisuals()
 {
+  
+  visualElements.add(new Drawable(width/2 - 135, height/2 - 350, 0, 250, 250, "graphics/frame.png"));
+  visualElements.add(new Rotatable(width/2 + 15, height/2 - 205, 0, 90, 90, 1.05, "graphics/gear1.png", -45, -45));
+  visualElements.add(new Rotatable(width/2 - 40, height/2 - 215, 0, 150, 150, -1, "graphics/gear2.png", -75, -75));
+  visualElements.add(new Rotatable(width/2 - 15, height/2 - 250, 0, 110, 110, 1.05, "graphics/gear3.png", -55, -55));
+  visualElements.add(new Drawable(width/2 - 78, height/2 - 288, 0, 125, 125, "graphics/element1.png"));
+  visualElements.add(new Rotatable(width/2 - 10, height/2 - 225, 0, 50, 50, 2, "graphics/hour.png", 0, 0));
+  visualElements.add(new Drawable(width/2 - 140, height/2 - 350, 0, 250, 250, "graphics/element2.png"));
+  
+  
+  visualElements.add(new Drawable(width/2 - 450, height/2 - 250, 0, 500, 500, "graphics/frame.png"));
+  visualElements.add(new Rotatable(width/2 - 140, height/2 + 30, 0, 180, 180, 1.05, "graphics/gear1.png", -90, -90));
+  visualElements.add(new Rotatable(width/2 - 240, height/2 + 25, 0, 300, 300, -1, "graphics/gear2.png", -150, -150));
+  visualElements.add(new Rotatable(width/2 - 200, height/2 - 70, 0, 220, 220, 1.05, "graphics/gear3.png", -110, -110));
+  visualElements.add(new Drawable(width/2 - 325, height/2 - 125, 0, 250, 250, "graphics/element1.png"));
+  visualElements.add(new Rotatable(width/2 - 193, height/2 - 5, 0, 100, 100, -1, "graphics/hour.png", 0, 0));
+  visualElements.add(new Drawable(width/2 - 450, height/2 - 250, 0, 500, 500, "graphics/element2.png"));
+  
+  visualElements.add(new Drawable(width/2 - 45, height/2 - 50, 0, 250, 250, "graphics/frame.png"));
+  visualElements.add(new Rotatable(width/2 + 105, height/2 + 95, 0, 90, 90, 1.05, "graphics/gear1.png", -45, -45));
+  visualElements.add(new Rotatable(width/2 + 50, height/2 + 85, 0, 150, 150, -1, "graphics/gear2.png", -75, -75));
+  visualElements.add(new Rotatable(width/2 + 75, height/2 + 50, 0, 110, 110, 1.05, "graphics/gear3.png", -55, -55));
+  visualElements.add(new Drawable(width/2 + 12, height/2 + 12, 0, 125, 125, "graphics/element1.png"));
+  visualElements.add(new Rotatable(width/2 + 80, height/2 + 75, 0, 50, 50, -5, "graphics/hour.png", 0, 0));
+  visualElements.add(new Drawable(width/2 - 50, height/2 - 50, 0, 250, 250, "graphics/element2.png"));
+  
+  /*
   visualElements.add(new Drawable(width/2 - 250, height/2 - 250, 0, 500, 500, "graphics/frame.png"));
   visualElements.add(new Rotatable(width/2 + 60, height/2 + 30, 0, 180, 180, 1.05, "graphics/gear1.png", -90, -90));
   visualElements.add(new Rotatable(width/2 - 40, height/2 + 25, 0, 300, 300, -1, "graphics/gear2.png", -150, -150));
@@ -191,6 +219,7 @@ void loadVisuals()
   visualElements.add(new Drawable(width/2 - 125, height/2 - 125, 0, 250, 250, "graphics/element1.png"));
   visualElements.add(new Rotatable(width/2 + 7, height/2 - 5, 0, 100, 100, -1, "graphics/hour.png", 0, 0));
   visualElements.add(new Drawable(width/2 - 250, height/2 - 250, 0, 500, 500, "graphics/element2.png"));
+  */
 }
 
 void loadMessages()
@@ -295,7 +324,7 @@ public void loadFromBuffer()
   detectionPoints = new ArrayList<Message>();
   for(int i = 0; i < quantity; i++)
   {
-    detectionPoints.add(messageBuffer.get(i));
+    detectionPoints.add(messageBuffer.remove(int(random(0,  messageBuffer.size()))));
   }
   messageBufferUpdated = false;
 }

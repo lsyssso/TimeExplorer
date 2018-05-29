@@ -60,6 +60,7 @@ public class Message extends Drawable
         tint(255, opacity);
         if(opacity > 255)
         {
+          opacity = 255;
           transforming = 2;
         }
         opacity += 25;
