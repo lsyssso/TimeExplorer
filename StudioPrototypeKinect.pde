@@ -26,7 +26,7 @@ int spawnLocController = 0;
 
 ArrayList<Message> messageBuffer = new ArrayList<Message>();
 ArrayList<Drawable> visualElements = new ArrayList<Drawable>();
-Message[] detectionPoints = new Message[MAX_DISPLAY_NO];
+ArrayList<Message> detectionPoints;
 
 boolean displayCapture = false;
 boolean displayDetectionBoundary = false;
@@ -55,6 +55,7 @@ void setup()
   hands[2] = loadAndResize(GRAPHICS_DIRECTORY + "hand2.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
   loadMessages();
   loadFromBuffer();
+  thread("checkUpdate");
 }
 
 
@@ -63,7 +64,10 @@ void draw()
   
   clear();
   background(0);
-  
+  if(messageBufferUpdated)
+  {
+    loadFromBuffer();
+  }
   int[] rightHandLoc;
   int[] leftHandLoc;
   ArrayList<KSkeleton> skeletonArrayAll =  kinect.getSkeletonColorMap();
@@ -191,13 +195,16 @@ void loadVisuals()
 
 void loadMessages()
 {
+  println("loading messages...");
   try
   {
     String[] lines = loadStrings(URL);
+    messageBuffer = new ArrayList<Message>();
     for(String s : lines)
     {
       createMessage(s);
     }
+    messageBufferUpdated = true;
   }
   catch(Exception e)
   {
@@ -270,6 +277,10 @@ public void keyPressed()
   {
     displayDetectionBoundary = !displayDetectionBoundary;
   }
+  else if(key == 'r')
+  {
+    thread("loadMessages");
+  }
 }
 
 public void loadFromBuffer()
@@ -279,10 +290,12 @@ public void loadFromBuffer()
   {
     quantity = MAX_DISPLAY_NO;
   }
+  detectionPoints = new ArrayList<Message>();
   for(int i = 0; i < quantity; i++)
   {
-    detectionPoints[i] = messageBuffer.get(i);
+    detectionPoints.add(messageBuffer.get(i));
   }
+  messageBufferUpdated = false;
 }
 
 PImage loadAndResize(String directory, int newWidth, int newHeight)
@@ -290,4 +303,14 @@ PImage loadAndResize(String directory, int newWidth, int newHeight)
   PImage newImage = loadImage(directory);
   newImage.resize(newWidth, newHeight);
   return newImage;
+}
+
+public void checkUpdate()
+{
+  while(true)
+  {
+    delay(600000);
+    println("updating...");
+    loadMessages();
+  }
 }
