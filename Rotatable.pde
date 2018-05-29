@@ -22,11 +22,11 @@ public class Rotatable extends Drawable
   }
   
   public Rotatable(){}
-  
   public void tick()
   {
     this.rotationZ += this.rotateSpeed;
   }
+  
   public void render()
   {
     tick();

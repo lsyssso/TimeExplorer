@@ -26,7 +26,7 @@ public class Message extends Drawable
     this.textY = textY;
   }
   
-  public void move()
+  public boolean move()
   {
     range[2] += this.speedY;
     range[3] += this.speedY;
@@ -44,7 +44,9 @@ public class Message extends Drawable
 
         d.y = range[2];
       }
+      return true;
     }
+    return false;
   }
   
 
@@ -119,17 +121,17 @@ public class Message extends Drawable
       offset = charPerLine * i;
     }
     newString = newString + this.message.substring(offset, this.message.length());
-    println(newString);
+    //println(newString);
     this.message = newString;
   }
   
-  private void enlargeDetectionArea()
+  protected void enlargeDetectionArea()
   {
     range[3] = range[2] + images.get(1).sizeHeight;
     range[1] = range[0] + images.get(1).sizeWidth;
   }
   
-  private void resetDetectionArea()
+  protected void resetDetectionArea()
   {
     range[3] = range[2] + images.get(0).sizeHeight;
     range[1] = range[0] + images.get(0).sizeWidth;

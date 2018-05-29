@@ -5,7 +5,7 @@ int MSG_WIDTH = 0;
 int MSG_HEIGHT = 1;
 int MSG_OPEN_WIDTH = 2;
 int MSG_OPEN_HEIGHT = 3;
-int MAX_PLAYER_NUMBER =3;
+int MAX_PLAYER_NUMBER = 3;
 int MAX_DISPLAY_NO = 4;
 //int FALLINGSPEED = 2;
 int LETTER_TEXT_X = 40;
@@ -24,11 +24,13 @@ String URL = "http://209.97.175.95:8081";
 
 int spawnLocController = 0;
 
+ArrayList<Message> messageBuffer = new ArrayList<Message>();
 ArrayList<Drawable> visualElements = new ArrayList<Drawable>();
-ArrayList<Message> detectionPoints = new ArrayList<Message>();
+Message[] detectionPoints = new Message[MAX_DISPLAY_NO];
 
 boolean displayCapture = false;
 boolean displayDetectionBoundary = false;
+boolean messageBufferUpdated = false;
 String mouseLoc;
 PImage bubble;
 PImage[] hands = new PImage[3];
@@ -52,6 +54,7 @@ void setup()
   hands[1] = loadAndResize(GRAPHICS_DIRECTORY + "hand1.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
   hands[2] = loadAndResize(GRAPHICS_DIRECTORY + "hand2.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
   loadMessages();
+  loadFromBuffer();
 }
 
 
@@ -61,8 +64,6 @@ void draw()
   clear();
   background(0);
   
-  
-  //println(faces.length);
   int[] rightHandLoc;
   int[] leftHandLoc;
   ArrayList<KSkeleton> skeletonArrayAll =  kinect.getSkeletonColorMap();
@@ -214,6 +215,7 @@ void createMessage(String s)
   int newMsgHeight =  MSG_SIZE[msgtype][MSG_HEIGHT];
   int newMsgOpenWidth = MSG_SIZE[msgtype][MSG_OPEN_WIDTH];
   int newMsgOpenHeight = MSG_SIZE[msgtype][MSG_OPEN_HEIGHT];
+  String newMsgStamp;
   String newMsgCover =  GRAPHICS_DIRECTORY + msg.getString("cover");
   String newMsgMsg = msg.getString("message");
   String newMsgBack;
@@ -221,6 +223,7 @@ void createMessage(String s)
   int textY;
   int newMsgLineLength;
   String newMsgFrom = msg.getString("fromDate").substring(0, 10);
+  Message newMsg;
   //println(newMsgFrom);
   if(msgtype == 0 || msgtype == 1)
   {
@@ -236,21 +239,23 @@ void createMessage(String s)
       textX = OLD_LETTER_TEXT_X;
       textY = OLD_LETTER_TEXT_Y;
     }
-    
+    newMsgCover += ".png";
+    newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 10)), newMsgFrom, textX, textY);
   }
   else
   {
+    newMsgStamp = msg.getString("stamp");
     newMsgLineLength = POSTCARD_LINE_LENGTH;
     newMsgBack = GRAPHICS_DIRECTORY + "postback.png";
     textX = POSTCARD_TEXT_X;
     textY = POSTCARD_TEXT_Y;
+    newMsgCover += ".png";
+    newMsg = new Postcard(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 10)), newMsgFrom, textX, textY, newMsgStamp);
   }
-  newMsgCover += ".png";
-  Message newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 10)), newMsgFrom, textX, textY);
   newMsg.breakText(newMsgLineLength);
   newMsg.addDrawable(new Drawable(spawnLocX, spawnLocY, 0, newMsgWidth, newMsgHeight, newMsgCover));
   newMsg.addDrawable(new Drawable(spawnLocX, spawnLocY, 0, newMsgOpenWidth, newMsgOpenHeight, newMsgBack));
-  detectionPoints.add(newMsg);
+  messageBuffer.add(newMsg);
   //visualElements.add(newMsg);
   spawnLocController += 1;
 }
@@ -264,6 +269,19 @@ public void keyPressed()
   else if(key == 'd')
   {
     displayDetectionBoundary = !displayDetectionBoundary;
+  }
+}
+
+public void loadFromBuffer()
+{
+  int quantity = messageBuffer.size();
+  if(quantity > MAX_DISPLAY_NO)
+  {
+    quantity = MAX_DISPLAY_NO;
+  }
+  for(int i = 0; i < quantity; i++)
+  {
+    detectionPoints[i] = messageBuffer.get(i);
   }
 }
 
