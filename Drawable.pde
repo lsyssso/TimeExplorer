@@ -1,7 +1,9 @@
 public class Drawable
 {
+  //basic attributes
   int x;
   int y;
+  //z is not used, but for the sake of extensibility, I leave it here
   int z;
   int sizeWidth;
   int sizeHeight;
@@ -14,8 +16,7 @@ public class Drawable
     this.z = z;
     this.sizeWidth = newWidth;
     this.sizeHeight = newHeight;
-    img = loadImage(imgUrl);
-    img.resize(newWidth, newHeight);
+    setImg(imgUrl);
   }
   
   public Drawable()

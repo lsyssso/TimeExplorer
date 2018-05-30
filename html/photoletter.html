@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Time Explorer</title>
+  <script type="text/javascript" src="js/utility.js" ></script>
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript">
+</script>
+</head>
+<style type="text/css">
+img.cover
+{position:absolute;
+  width: 768px;
+  height: 1024px;
+}
+
+
+div.tg1
+{position:absolute;
+top: 1850px;
+  left: 508px;
+  width: 550px;
+  height: 100px;
+}
+div.letter textarea
+{position:absolute;
+padding:0px;
+margin:0px;
+top: 400px;
+left: 250px;
+width: 1050px;
+height: 1000px;
+font-size: 48px;
+font-family: arial;
+color:#806954;
+vertical-align: top;
+display: inline-block;
+
+}
+
+.back
+			{
+			position:absolute;
+			left: 100px;
+			top: 100px;
+			width: 10%;
+			height: 10%;
+			}
+ </style>
+<body>
+
+
+<div class="cover">
+<img src="./img/Letter.png" >  
+</div>
+<div class="tg1" onclick="finishLetter();">
+</div>
+
+<div class="letter"><textarea placeholder="Type your message here..." style ="font-family:'Andale Mono', Arial, San-serif; background:none;border:0; float:left;margin-top:0px" id="context" name="letter" type="text" coles="10" rows="5"></textarea></div>
+
+<div class="back" onclick="back();"></div>
+
+
+
+</body>
+</html>

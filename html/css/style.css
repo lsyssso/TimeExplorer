@@ -1,0 +1,153 @@
+/* css 重置 */
+
+.cover{
+	position: absolute;
+	padding:0;
+	margin:0;
+}
+.selectable
+{
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.tg1
+{position:absolute;
+top: 1850px;
+  left: 508px;
+  width: 550px;
+  height: 100px;
+}
+
+.back
+{
+  position:absolute;
+  left: 100px;
+  top: 120px;
+  width: 10%;
+  height: 10%;
+			}
+
+.selectCoverBack
+{
+  position:absolute;
+  left: 100px;
+  top: 160px;
+  width: 10%;
+  height: 10%;
+			}
+
+.slideGroup {
+	position: absolute;
+	
+	top:400px;
+	left:10px;
+	width: 1500px;
+	height:1000px;
+}
+
+.slideGroup .slideBox {
+	overflow: hidden;
+	zoom: 1;
+	padding: 10px 0 10px 100px;
+	position: relative;
+}
+
+.slideGroup .sPrev,
+.slideGroup .sNext {
+	position: absolute;
+	left: 100px;
+	top: 100px;
+	display: block;
+	width: 100px;
+	height: 385px;
+	background: url(../img/icoLeft.png) center center no-repeat;
+}
+
+.slideGroup .sNext {
+	left: auto;
+	right: 100px;
+	width:100px;
+	background: url(../img/icoRight.png) center center no-repeat;
+}
+
+.slideGroup .parBd ul {
+	overflow: hidden;
+	zoom: 1;
+}
+
+.slideGroup .parBd ul li {
+	margin: 0 8px;
+	float: left;
+	width: 1300px;
+	position: relative;
+}
+
+.slideGroup .parBd ul li .pic {
+	text-align: center;
+}
+
+.slideGroup .parBd ul li .pic img {
+	width: 900px;
+	height:1290px;
+	left: 200px;
+	/*display: block;*/
+	padding: 2px;
+}
+
+.slideGroup .parBd ul li .pic1 {
+	text-align: center;
+}
+
+.slideGroup .parBd ul li .pic1 img {
+	width: 900px;
+	height:1290px;
+	left: 200px;
+	/*display: block;*/
+	padding: 2px;
+}
+
+.slideGroup .parBd ul li .pic2 {
+	text-align: center;
+}
+
+.slideGroup .parBd ul li .pic2 img {
+	width: 900px;
+	height:1290px;
+	left: 200px;
+	/*display: block;*/
+	padding: 2px;
+}
+
+
+.slideGroup .parBd ul li .description {
+	position: absolute;
+	width: 1000px;
+	height: 200px;
+	left:150px;
+	padding: 20px 10px 10px 20px;
+	top:700px;
+	
+}
+.slideGroup .parBd ul li .description p{
+	font-family:"Andale Mono";
+	font-size:48px;
+	left: 150px;
+	align:center;
+	vertical-align:middle;
+	color: #8B4513;
+	height: 40px;
+	line-height: 40px; 
+	align:center;
+    vertical-align:middle;
+}
+.slideGroup .parBd ul li .description a{
+	color: #fff;
+	float: right;
+	margin-top: 10px;
+	background: #7c0002;
+	border-radius: 5px;
+	padding: 3px 10px;
+}

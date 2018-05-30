@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Time Explorer</title>
+		
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/Lunbo.js" ></script>
+		<script type="text/javascript" src="js/utility.js" ></script>
+		<style type="text/css">
+			
+			.cover{position:absolute;width: 768px; height: 1024px;}
+			.letter textarea{position:absolute;top: 1128px;left: 185px;width: 571px;height: 476px;font-size: 48px;font-family: arial;font-color: #806954;vertical-align: top;display: inline-block;}
+			.tg1{position:absolute;top: 1850px;left: 508px; width: 550px; height: 100px;}
+			.Box {position: absolute;left:180px;top:350px;}
+			.Box .content {width: 1200px;margin: 0 auto;}
+			.Box h2 {text-align: center;margin-bottom: 35px;padding-top: 250px;}
+			.Box .Box_con {position: relative;}
+			.Box .Box_con .btnl {position: absolute;}
+			.Box .Box_con .btn {display: block;width: 41px;height: 41px;position: absolute;top: 80px;cursor: pointer;}
+			.Box .Box_con .btnl {background: url(img/jtl02.png) no-repeat center;left: -30px; top:130px;}
+			.Box .Box_con .btnr {background: url(img/jtr02.png) no-repeat center;right: -70px; top:130px;}
+			.Box .Box_con .btnl:hover {background: url(img/jtl03.png) no-repeat center;}
+			.Box .Box_con .btnr:hover {background: url(img/jtr03.png) no-repeat center;}
+			.Box .Box_con .conbox {position: relative;overflow: hidden;}
+			.Box .Box_con .conbox ul {position: relative;list-style: none;}
+			.Box .Box_con .conbox ul li {float: left;top:300px;width: 285px;height: 200px;margin-left: 20px;overflow: hidden;}
+			.Box .Box_con .conbox ul li:first-child {margin-left: 0;}
+			.Box .Box_con .conbox ul li img {display: block;top:300px;width: 285px;height: 200px;transition: all 0.5s;}
+			.Box .Box_con .conbox ul li:hover img {transform: scale(1.1);}
+			
+			.Box .BoxSwitch {margin-top: 30px;text-align: center;}
+			.Box .BoxSwitch span {display: inline-block;*display: inline;*zoom: 1;vertical-align: middle;width: 30px;height: 3px;background: #ccc;margin: 0 5px;cursor: pointer;}
+			.Box .BoxSwitch span.cur {background: #907e6e;}
+			.pointer {cursor: pointer}
+			.back
+			{
+			position:absolute;
+			left: 100px;
+			top: 160px;
+			width: 10%;
+			height: 10%;
+			}
+
+			.postcard
+			{
+			position:absolute;
+			left: 100px;
+			top: 865px;
+			}
+		</style>
+		
+	</head>
+	<body>
+	<div class="cover">
+    <img src="./img/postcard.png" >  
+    </div>
+	<div class="postcard">
+    <img src="./img/postback.png" height="870" width="1345">  
+    </div>
+
+    <div class="letter"><textarea maxlength="80" placeholder="Type your message here..." style="font-family:'Andale Mono'，Arial, San-serif;background:none;border:0; float:left;margin-top:0px; font-family: 'Andale Mono', Arial, sans-serif" id="context" name="letter" type="text"></textarea></div>
+
+    <div class="tg1" onclick="setPostcardContent()"></div>
+
+    <div class="Box">
+    	<div class="content">
+    		
+    		<div class="Box_con clearfix">
+    			<span class="btnl btn" id="btnl"></span>
+    			<span class="btnr btn" id="btnr"></span>
+    			
+    			<div class="conbox" id="BoxUl">
+	    			<ul>
+	    				<li class="cur"><a class="pointer" onclick="setStamp(&quot;1.png&quot;);"><img src="img/1.png" alt=""/></a></li>
+	    				
+	    				<li class="cur"><a class="pointer" onclick="setStamp(&quot;2.png&quot;);"><img src="img/2.png" alt=""/></a></li>
+	    				
+	    				<li class="cur"><a class="pointer" onclick="setStamp(&quot;3.png&quot;);"><img src="img/3.png" alt=""/></a></li>
+	    			
+	    				<li class="cur"><a class="pointer" onclick="setStamp(&quot;4.png&quot;);"><img src="img/4.png" alt=""/></a></li>
+	    				
+	    				<li class="cur"><a class="pointer" onclick="setStamp(&quot;5.png&quot;);"><img src="img/5.png" alt=""/></a></li>
+    				</ul>
+    			</div>
+    			
+    			<p class="BoxSwitch" id="BoxSwitch">
+    				<span class="cur"></span>
+    				<span></span>
+    				<span></span>
+    				<span></span>
+    			</p>
+    			
+    		</div>
+    		
+    	</div>
+    </div>
+
+	<div id="selectedStamp" style="position:absolute; left:1150px; top:1000px;"><img src="" ></div>
+	<div class="back" onclick="back();"></div>
+    <script type="text/javascript">
+		$("document").ready()
+		{
+			getStamp();
+			LbMove('BoxUl','btnl','btnr','BoxSwitch',true,'left',true,305,1000,5000,4);
+		}
+    	
+    </script>
+	
+	</body>
+</html>

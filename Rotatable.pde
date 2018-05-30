@@ -1,15 +1,20 @@
 public class Rotatable extends Drawable
 {
+  
   float rotationZ;
   float rotateSpeed;
+  
   int rotateAroundX;
   int rotateAroundY;
+  
+  //even though 3D rotation is not implemented, but I'll leave this variables here for extensibility
   float rotationY;
   public Rotatable(int x, int y, int z, int newWidth, int newHeight, float rotationZspeed, String imgUrl, int rotateAroundX, int rotateAroundY)
   {
     super(x, y, z, newWidth, newHeight, imgUrl);
     this.rotationZ = 0;
     this.rotateSpeed = rotationZspeed;
+    //specified which point will the image rotate around
     this.rotateAroundX = rotateAroundX;
     this.rotateAroundY = rotateAroundY;
   }
@@ -33,7 +38,7 @@ public class Rotatable extends Drawable
     pushMatrix();
     translate(this.x, this.y);
     rotate(radians(this.rotationZ));
-    rotate(radians(this.rotationY));
+    //rotate(radians(this.rotationY));
     image(this.img, this.rotateAroundX, this.rotateAroundY, this.sizeWidth, this.sizeHeight);
     popMatrix();
   }

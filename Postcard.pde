@@ -1,5 +1,6 @@
 public class Postcard extends Message
 {
+  //store an image for stamp
   PImage stamp;
   
   
@@ -11,6 +12,11 @@ public class Postcard extends Message
   } 
   
   public void render()
+  /*
+  Basically the same as Message.render(), just that Postcard will render the stamp as well.
+  
+  ***Can be refactored.
+  */
   {
     if(status > 0)
     {
@@ -26,7 +32,6 @@ public class Postcard extends Message
       }
       status -= 1;
       images.get(1).render();
-      //println(textX, textY);
       fill(0);
       pushMatrix();
       translate(range[0], range[2]);

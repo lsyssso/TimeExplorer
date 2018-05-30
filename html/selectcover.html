@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Time Explorer</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.SuperSlide.2.1.1.js"></script>
+		<script type="text/javascript" src="js/utility.js" ></script>
+	</head>
+
+	<body>
+	    <div class="cover">
+           <img src="./img/selectp1.png" >  
+                </div>
+		<div class="slideGroup" style="">
+			<!--轮播主体内容开始-->
+			<div class="parBd">
+				<div class="slideBox">
+					<a class="sPrev" href="javascript:void(0)"></a>
+					<ul>
+						<li>
+							<div class="pic selectable" >
+								<img src="./img/01.png" onclick="selectCover(&quot;cbc001&quot;, &quot;.pic&quot;);"/>
+							</div>
+							<div class="description"  align="center" vertical-align="middle" >
+							    <p>Description:</p>
+								<p >Bank Building’s façade was originated from Commercial Bank Company (CBC) in Australia in 1923 – 1924 located at the intersection of George and Barrack St in Martin Place. The façade is in Victorian Italianate style.</p>
+							
+				              
+							</div>
+						</li>
+						<li>
+							<div class="pic1 selectable" >
+								<img src="./img/02.png" onclick="selectCover(&quot;cbc002&quot;, &quot;.pic1&quot;);"/>
+							</div>
+							<div class="description"  align="center" vertical-align="middle">
+								<p>Description:</p>
+								<p>When Bank Building was being re-built by Lesile Wilkinson in 1923 - 1924 on Science Road, as a part of the Science Toad precinct in the 1920s.</p>
+							</div>
+						</li>
+						<li>
+							<div class="pic2 selectable" >
+								<img src="./img/03.png"  onclick="selectCover(&quot;cbc003&quot;, &quot;.pic2&quot;);"/>
+							</div>
+							<div class="description"  align="center" vertical-align="middle">
+								<p>Description:</p>
+								<p>Bank Building’s façade was transplanted stone by stone from Commercial Bank Company (CBC) in Australia in 1923 - 1924, located at the intersection of George and Barrack St (Left) in Martin Place.</p>
+							</div>
+						</li>
+					</ul>
+					<a class="sNext" href="javascript:void(0)"></a>
+				</div>
+				
+
+				
+			</div>
+			
+		</div>
+		<div class="tg1" onclick="finishCoverSelection()"> </div>
+        <div class="selectCoverBack" onclick="back();"></div>
+		<script type="text/javascript">
+			jQuery(".slideGroup .slideBox").slide({
+				mainCell: "ul",
+				vis: 1,
+				prevCell: ".sPrev",
+				nextCell: ".sNext",
+				effect: "leftLoop"
+			});
+		</script>
+	</body>
+
+</html>

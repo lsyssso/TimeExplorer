@@ -1,0 +1,26 @@
+.postcard
+{position:absolute;
+width: 768px;
+height: 1024px;
+}
+
+.Box {position: absolute;}
+			.Box .content {width: 1200px;margin: 0 auto;}
+			.Box h2 {text-align: center;margin-bottom: 35px;padding-top: 250px;}
+			.Box .Box_con {position: relative;}
+			.Box .Box_con .btnl {position: absolute;}
+			.Box .Box_con .btn {display: block;width: 41px;height: 41px;position: absolute;top: 80px;cursor: pointer;}
+			.Box .Box_con .btnl {background: url(img/jtl02.png) no-repeat center;left: -72px;}
+			.Box .Box_con .btnr {background: url(img/jtr02.png) no-repeat center;right: -72px;}
+			.Box .Box_con .btnl:hover {background: url(img/jtl03.png) no-repeat center;}
+			.Box .Box_con .btnr:hover {background: url(img/jtr03.png) no-repeat center;}
+			.Box .Box_con .conbox {position: relative;overflow: hidden;}
+			.Box .Box_con .conbox ul {position: relative;list-style: none;}
+			.Box .Box_con .conbox ul li {float: left;width: 285px;height: 200px;margin-left: 20px;overflow: hidden;}
+			.Box .Box_con .conbox ul li:first-child {margin-left: 0;}
+			.Box .Box_con .conbox ul li img {display: block;width: 285px;height: 200px;transition: all 0.5s;}
+			.Box .Box_con .conbox ul li:hover img {transform: scale(1.1);}
+			
+			.Box .BoxSwitch {margin-top: 30px;text-align: center;}
+			.Box .BoxSwitch span {display: inline-block;*display: inline;*zoom: 1;vertical-align: middle;width: 30px;height: 3px;background: #ccc;margin: 0 5px;cursor: pointer;}
+			.Box .BoxSwitch span.cur {background: red;}

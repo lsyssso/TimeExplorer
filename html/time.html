@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Time</title>
+<link rel="stylesheet" type="text/css" href="css/timer.css">
+<script type="text/javascript" src="js/utility.js" ></script>
+</head>
+<body>
+<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="js/jquery-timepicker.js"></script>
+<script>
+	$().ready(function(e) {
+//		var timePicker = new HunterTimePicker({
+//			target: '#timeChoice1'
+//		});
+//		timePicker.init();
+
+//		$(".time-picker").show(function () {
+//			var timePicker = new HunterTimePicker({
+//			target: $(this)
+//			});
+//			timePicker.init();
+//		});
+
+		$("#timePicker").hunterTimePicker();
+		//$(".time-picker").hunterTimePicker();
+		var type = localStorage.getItem("type");
+		if(type != null)
+		{
+			$("#type").innerHTML = type;
+		}
+	});
+</script>
+
+<div id="timer">
+<img src="./img/Time.png" >  
+</div>
+
+
+<div class="sendButton" onclick="send()">
+</div>
+
+
+<input type="text" id="timePicker" class="picker" placeholder="HH : MM" name="1">
+
+<div class="back" onclick="back();"></div>
+
+<div id="type"></div>
+</body>
+</html>

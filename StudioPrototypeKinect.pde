@@ -1,91 +1,147 @@
-import KinectPV2.KJoint;
-import KinectPV2.*;
+/*
+This program requires library KinectPV2 to run, if you do not have it, 
+please download it from Processing library manager.
+*/
 
+import KinectPV2.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Arrays;
+
+//each item specified the properties of different type of messages
+//item 0 represents the properties of modern letter
+//item 1 represents the properties of vintage letter
+//item 2 represents the properties of postcard
+int[][] MSG_SIZE = new int[][]{new int[]{186, 135, 372, 593}, new int[]{181, 106, 362, 596}, new int[]{187, 120, 374, 241}};
+//the index to get different property from the an item of MSG_SIZE
 int MSG_WIDTH = 0;
 int MSG_HEIGHT = 1;
 int MSG_OPEN_WIDTH = 2;
 int MSG_OPEN_HEIGHT = 3;
+
+//Specified how maximum number of people that program will draw their hands
 int MAX_PLAYER_NUMBER = 3;
+//Maximum number of message to be display at the same time
 int MAX_DISPLAY_NO = 4;
-//int FALLINGSPEED = 2;
+
+//The position of the text, relative to the origin of the message
 int LETTER_TEXT_X = 40;
 int LETTER_TEXT_Y = 70;
 int OLD_LETTER_TEXT_X = 70;
 int OLD_LETTER_TEXT_Y = 70;
-int LETTER_LINE_LENGTH = 23;
-int POSTCARD_LINE_LENGTH = 17;
 int POSTCARD_TEXT_X = 30;
 int POSTCARD_TEXT_Y = 100;
+
+//The number of characters to fit in one line, for each type of messages
+int LETTER_LINE_LENGTH = 23;
+int POSTCARD_LINE_LENGTH = 17;
+
+//size of the hand icon which represents the hand of player
 int HAND_ICON_SIZE = 70;
-int[][] MSG_SIZE = new int[][]{new int[]{186, 135, 372, 593}, new int[]{181, 106, 362, 596}, new int[]{187, 120, 374, 241}};
-int[][] SPAWN_LOC = new int[][]{new int[]{600, 300}, new int[]{1500, 500}, new int[]{1000, 700}, new int[]{200, 200}};
+
+//There are four preset spawn locations, where messages will appear
+int[][] SPAWN_LOC = new int[][]{new int[]{600, -300}, new int[]{1500, -300}, new int[]{1000, -300}, new int[]{200, -300}};
+
+//Directory to graphical elements
 String GRAPHICS_DIRECTORY = "graphics/";
+
+//The Url of data server
 String URL = "http://209.97.175.95:8082";
+
+//Three envelope colours
 String[] ENVELOPE_STYLE = new String[]{"Ivory", "Yellow", "Pink"};
+
+//For controlling which spawn location is used for next created message
 int spawnLocController = 0;
 
-ArrayList<Message> messageBuffer = new ArrayList<Message>();
+//visualelements stores non-interactable visuals
 ArrayList<Drawable> visualElements = new ArrayList<Drawable>();
-ArrayList<Message> detectionPoints;
+//messageBuffer stores the messages created from loaded data
+ArrayList<Message> messageBuffer = new ArrayList<Message>();
+//detectionPoints stores the actual messages to be shown on screen
+ArrayList<Message> detectionPoints = new ArrayList<Message>();
 
+//control whether to show the vision of Kinect
 boolean displayCapture = false;
+//control whether to show the boundary of detection areas
 boolean displayDetectionBoundary = false;
+//To tell whether the buffer has been updated
 boolean messageBufferUpdated = false;
-String mouseLoc;
+//To store an image showing instruction
 PImage bubble;
+//To store visual elements representing hand
 PImage[] hands = new PImage[3];
+
+
 KinectPV2 kinect;
 
 
 
 void setup()
 {
+  //P3D has better performance
   fullScreen(P3D);
+  //setup font size and style
   textFont(createFont("Georgia", 20));
   frameRate(60);
-  
+  //initialize Kinect
   kinect = new KinectPV2(this);
   kinect.enableSkeletonColorMap(true);
   kinect.enableColorImg(true);
   kinect.init();
+  //Loading non-interactive visuals
   loadVisuals();
+  //Setting up other visuals
   bubble = loadAndResize(GRAPHICS_DIRECTORY + "bubble.png", 200, 200);
   hands[0] = loadAndResize(GRAPHICS_DIRECTORY + "hand0.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
   hands[1] = loadAndResize(GRAPHICS_DIRECTORY + "hand1.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
   hands[2] = loadAndResize(GRAPHICS_DIRECTORY + "hand2.png", HAND_ICON_SIZE, HAND_ICON_SIZE);
-  loadMessages();
-  loadFromBuffer();
-  //thread("checkUpdate");
+  //updating message every 10 mins, running on another thread
+  thread("checkUpdate");
 }
 
 
 void draw()
 {
   
-  clear();
+  //refresh background
   background(0);
+  //check if buffer is updated
   if(messageBufferUpdated)
   {
     loadFromBuffer();
   }
+  //initialize variables for calculation
   int[] rightHandLoc;
   int[] leftHandLoc;
+  //Reading skeleton data
   ArrayList<KSkeleton> skeletonArrayAll =  kinect.getSkeletonColorMap();
+  
+  //Due the fact that Kinect will put most recent detected skeleton to the first position
+  //We may run into a situation that user find Kinect lose track of them when the player number
+  //reaches the limit and a new user wants to join in.
+  
+  //create another skeleton array, which will be the one for calculation
   ArrayList<KSkeleton> skeletonArray = new ArrayList<KSkeleton>();
+  //specify how many skeleton we want to get from the raw skeleton array
   int numberOfPlayers = MAX_PLAYER_NUMBER;
-  if(skeletonArrayAll.size() <= 3)
+  if(skeletonArrayAll.size() <= MAX_PLAYER_NUMBER)
   {
     numberOfPlayers = skeletonArrayAll.size();
   }
+  
+  //pop one skeleton each iteration, from the last object from the array
   for(int i = 0; i < numberOfPlayers; i++)
   {
     skeletonArray.add(skeletonArrayAll.remove(skeletonArrayAll.size() - 1));
   }
-
+  
   KJoint[] joints;
   KJoint rightHand;
   KJoint leftHand;
   renderBackground();
+  
+  //show detection boundary if we want to
   if(displayDetectionBoundary)
   {
     noFill();
@@ -96,54 +152,60 @@ void draw()
       rect(d.range[0], d.range[2], d.range[1] - d.range[0], d.range[3] - d.range[2]);
     }
   }
-  image(bubble, 0, height - 200);
-  fill(0);
-  text("Try waving \nyour hand!", 20, height - 150);
+  
+  //display the instruction bubble
+  image(bubble, 0, height - (frameCount % height));
   renderMessages();
+  
+  //preparing variables to map user's hand to the screen
   float rightX;
   float leftX;
   float rightY;
   float leftY;
- 
+  //start checking if there is hand within detection areas
   for(Message d : detectionPoints)
   {
+    //traverse every skeleton
     for (int i = 0; i < skeletonArray.size(); i++) {
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
       if (skeleton.isTracked()) {
+        //get the joint for both hands
         joints = skeleton.getJoints();
         rightHand = joints[KinectPV2.JointType_HandTipRight];
         leftHand = joints[KinectPV2.JointType_HandTipLeft];
-        color col  = skeleton.getIndexColor();
-        fill(col);
-        stroke(col);
+        
+        //Kinect has a smaller resolution so we have to map the position of x value to bigger screen
         rightX = map(rightHand.getX(), 360, 1600, 0, 1900);
         leftX = map(leftHand.getX(), 360, 1600, 0, 1900);
+        //Y value doesn't seem to be impacting a lot
         rightY = rightHand.getY();
         leftY = leftHand.getY();
         rightHandLoc = new int[]{int(rightX), int(rightY)};
         leftHandLoc = new int[]{int(leftX), int(leftY)};
+        
+        //draw the hands
         drawJoint(rightX, rightY, i, true);
-        drawJoint(leftX, leftY, i, false); //<>//
+        drawJoint(leftX, leftY, i, false); //<>// //<>//
+        
+        //check whether a hand is within the detection area
         if(isBetween(d.range, rightHandLoc) || isBetween(d.range, leftHandLoc))
         {
+          //open the envelope/postcard
           d.switchImg();
         }
       }
     }
   }
   
-  
   if(displayCapture)
   {
     image(kinect.getColorImage(), width - width/4, height - height/4, width/4, height/4);
   }
-  //fill(255);
-  //mouseLoc = mouseX + ", " + mouseY;
-  //text(mouseLoc, mouseX, mouseY);
-  //println(frameRate);
 }
 
-boolean isBetween(int[] range, int[] location)
+public boolean isBetween(int[] range, int[] location)
+/* Check if a given pair of x and y is within given area.
+*/
 {
   if(location[0] > range[0] && location[0] < range[1]
   && location[1] > range[2] && location[1] < range[3])
@@ -156,7 +218,10 @@ boolean isBetween(int[] range, int[] location)
   }
 }
 
-void renderBackground()
+public void renderBackground()
+/*
+render each non-interactive elements
+*/
 {
   for(Drawable d : visualElements)
   {
@@ -164,7 +229,10 @@ void renderBackground()
   }
 }
 
-void renderMessages()
+public void renderMessages()
+/*
+render each interactive messages
+*/
 {
   for(Message m : detectionPoints)
   {
@@ -172,18 +240,27 @@ void renderMessages()
   }
 }
 
-void drawJoint(float x, float y, int index, boolean isRightHand) {
+
+public void drawJoint(float x, float y, int colour, boolean isRightHand) 
+/*
+Draw a hand of user
+*/
+{
   pushMatrix();
   translate(x, y);
   if(isRightHand)
   {
+    //flip the image
     scale(-1, 1);
   }
-  image(hands[index], 0, 0);
+  image(hands[colour], 0, 0);
   popMatrix();
 }
 
-void loadVisuals()
+public void loadVisuals()
+/*
+Creating every non-interactive element
+*/
 {
   
   visualElements.add(new Drawable(width/2 - 135, height/2 - 350, 0, 250, 250, "graphics/frame.png"));
@@ -223,16 +300,24 @@ void loadVisuals()
 }
 
 void loadMessages()
+/*
+try loading messages from the server and create Message objects
+then saving objects to the buffer
+*/
 {
   println("loading messages...");
   try
   {
-    String[] lines = loadStrings(URL);
+    List<String> lines = Arrays.asList(loadStrings(URL));
+    //randomize the order
+    Collections.shuffle(lines);
+    //clean messagebuffer
     messageBuffer = new ArrayList<Message>();
     for(String s : lines)
     {
       createMessage(s);
     }
+    
     messageBufferUpdated = true;
   }
   catch(Exception e)
@@ -241,9 +326,13 @@ void loadMessages()
   }
 }
 
-void createMessage(String s)
+public void createMessage(String s)
+/*
+Given a JSON string, create a Message object and add to buffer
+*/
 {
   JSONObject msg = parseJSONObject(s);
+  //loading properties of the message and store them in variables
   int spawnLocX = SPAWN_LOC[spawnLocController % MAX_DISPLAY_NO][0];
   int spawnLocY = SPAWN_LOC[spawnLocController % MAX_DISPLAY_NO][1];
   int msgtype = msg.getInt("msgtype");
@@ -260,11 +349,14 @@ void createMessage(String s)
   int newMsgLineLength;
   String newMsgFrom = msg.getString("fromDate").substring(0, 10);
   Message newMsg;
-  //println(newMsgFrom);
-  if(msgtype == 0 || msgtype == 1)
+  
+  //Checking message type, 0 = modern letter, 1 = vintage letter, 2 = postcard
+  if(msgtype == 0 || msgtype == 1) //letter
   {
+    //Set the line length
     newMsgLineLength = LETTER_LINE_LENGTH;
     
+    //Set text position depends on text type
     if(msgtype == 0)
     {
       textX = LETTER_TEXT_X;
@@ -276,11 +368,13 @@ void createMessage(String s)
       textX = OLD_LETTER_TEXT_X;
       textY = OLD_LETTER_TEXT_Y;
     }
+    
     newMsgBack = newMsgCover + "-open.png";
     newMsgCover += ".png";
+    //Create new instance of messagew
     newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 10)), newMsgFrom, textX, textY);
   }
-  else
+  else //postcard
   {
     newMsgStamp = msg.getString("stamp");
     newMsgLineLength = POSTCARD_LINE_LENGTH;
@@ -290,17 +384,29 @@ void createMessage(String s)
     newMsgCover += ".png";
     newMsg = new Postcard(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 10)), newMsgFrom, textX, textY, newMsgStamp);
   }
+  //Process the text to fit in the area
   newMsg.breakText(newMsgLineLength);
+  //Adding images each reflecting a state of message
   newMsg.addDrawable(new Drawable(spawnLocX, spawnLocY, 0, newMsgWidth, newMsgHeight, newMsgCover));
   newMsg.addDrawable(new Drawable(spawnLocX, spawnLocY, 0, newMsgOpenWidth, newMsgOpenHeight, newMsgBack));
   messageBuffer.add(newMsg);
-  //visualElements.add(newMsg);
-  spawnLocController += 1;
+  //determine where next generated message will spawn
+  spawnLocController = (spawnLocController + 1) % MAX_DISPLAY_NO;
+}
+
+public void loadHistoricalMessages()
+{
+  //createHistoricalMessage("It's hard to believe the old milling building has turned into this beautiful Bank building\n\nBen", "1940-05-30");
+  //createHistoricalMessage("Did they literally move the entire facade from Commercial Banking Company to here?\n\nJason", "1923-12-21");
+  //createHistoricalMessage("Look at this new Commonwealth bank!\n\nJake", "1938-08-11");
+  //createHistoricalMessage("Bank building now belongs to Pharmacy!\n\nJimmy", "1958-04-27");
+  //createHistoricalMessage("A symbolic identical representation of the scientific precinct @Bank building\n\nHayden", "1955-03-03");
+  //createHistoricalMessage("So bad that the uni can't afford new materials\n\nA hard working builder", "1923-09-15");
 }
 
 public void keyPressed()
 {
-  if(key == 'c')// when r is pressed, the tree is regenerated
+  if(key == 'c')
   {
     displayCapture = !displayCapture;
   }
@@ -315,21 +421,29 @@ public void keyPressed()
 }
 
 public void loadFromBuffer()
+/*
+Loading messages from buffer, maximum allowed number of
+messages will be loaded
+*/
 {
   int quantity = messageBuffer.size();
   if(quantity > MAX_DISPLAY_NO)
   {
     quantity = MAX_DISPLAY_NO;
   }
+  //clean current messages
   detectionPoints = new ArrayList<Message>();
   for(int i = 0; i < quantity; i++)
   {
-    detectionPoints.add(messageBuffer.remove(int(random(0,  messageBuffer.size()))));
+    detectionPoints.add(messageBuffer.remove(0));
   }
   messageBufferUpdated = false;
 }
 
 PImage loadAndResize(String directory, int newWidth, int newHeight)
+/*
+A small unility to resize the loaded image for better performance
+*/
 {
   PImage newImage = loadImage(directory);
   newImage.resize(newWidth, newHeight);
@@ -340,8 +454,8 @@ public void checkUpdate()
 {
   while(true)
   {
-    delay(600000);
     println("updating...");
     loadMessages();
+    delay(600000);
   }
 }
