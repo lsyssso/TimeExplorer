@@ -321,6 +321,7 @@ then saving objects to the buffer
     Collections.shuffle(lines);
     //clean messagebuffer
     messageBuffer = new ArrayList<Message>();
+    spawnLocController = 0;
     for(String s : lines)
     {
       createMessage(s);
@@ -330,10 +331,13 @@ then saving objects to the buffer
     //prepard from loading from buffer
     for(Message m : detectionPoints)
     {
-      m.setOpacity(255);
-      //Move detection range to an unreachable location 
-      m.range = new int[]{-300, -300, -300, -300};
-      m.status = -1;
+      if(m.status == 0)
+      {
+        m.setOpacity(255);
+        //Move detection range to an unreachable location 
+        m.range = new int[]{-300, -300, -300, -300};
+        m.status = -1;
+      }
     }
     reloadCountDown = 85;
   }
@@ -439,11 +443,24 @@ messages will be loaded
   {
     quantity = MAX_DISPLAY_NO;
   }
-  //clean current messages
-  detectionPoints = new ArrayList<Message>();
-  for(int i = 0; i < quantity; i++)
+  if(detectionPoints.size() == 0)
   {
-    detectionPoints.add(messageBuffer.remove(0));
+  //clean current messages
+    detectionPoints = new ArrayList<Message>();
+    for(int i = 0; i < quantity; i++)
+    {
+      detectionPoints.add(messageBuffer.remove(0));
+    }
+  }
+  else
+  {for(int i = 0; i < quantity; i++)
+    {
+      if(detectionPoints.get(i).status < 0)
+      {
+        detectionPoints.set(i, messageBuffer.get(i));
+      }
+    }
+    
   }
   messageBufferUpdated = false;
 }
