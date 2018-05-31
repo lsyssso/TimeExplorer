@@ -1,4 +1,6 @@
-﻿
+﻿/*
+This timepicker utility is modified based on the skeleton code found on http://www.17sucai.com/pins/24146.html
+*/
 
 (function ($) {
 	$.hunterTimePicker = function (box, options) {

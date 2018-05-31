@@ -1,10 +1,16 @@
 function setStamp(imgDir)
+/*
+change the directory of source of HTML element, and save it to localStorage
+*/
 {
     $("#selectedStamp").find("img").attr("src", "img/" + imgDir);
     localStorage.setItem("stamp", imgDir);
 }
 
 function getStamp()
+/*
+load an image from localStorage and put it to the src attribute
+*/
 {
     var stamp = localStorage.getItem("stamp");
     if(stamp)
@@ -17,6 +23,9 @@ function getStamp()
 
 
 function selectType(type)
+/*
+redirecting page based on the selection of user
+*/
 {
     localStorage.setItem("type", type);
     if(type == 0)
@@ -30,35 +39,26 @@ function selectType(type)
 }
 
 function selectCover(cover, tag)
+/*
+save cover selection to localStorage
+*/
 {
     localStorage.setItem("cover", cover);
     window.location.href = "stamp.html";
-    //$(tag).find("img").css("border-color", "#806954");
-    //if(tag == ".pic")
-    //{ 
-    //    $(".pic1").find("img").css("border-color", "transparent");
-    //    $(".pic2").find("img").css("border-color", "transparent");
-    //}
-    //else if(tag == ".pic1")
-    //{
-    //    $(".pic").find("img").css("border-color", "transparent");
-    //    $(".pic2").find("img").css("border-color", "transparent");
-    //}
-    //else if(tag == ".pic2")
-    //{
-    //    $(".pic").find("img").css("border-color", "transparent");
-    //    $(".pic1").find("img").css("border-color", "transparent");
-    //}
-    //alert(localStorage.getItem("cover"));
 }
 
 function finishCoverSelection()
+/*
+use default cover
+*/
 {
-    //var cover = localStorage.getItem("cover");
-    window.location.href = "stamp.html";
+    selectCover("cbc001", ".pic");
 }
 
 function finishLetter()
+/*
+use default envelope colour
+*/
 {
     localStorage.setItem("cover", "Ivory");
     if(setContent())
@@ -68,6 +68,10 @@ function finishLetter()
 }
 
 function setContent()
+/*
+check if user input anything to text area, if so, store the text to
+localStorage, otherwise pop a message.
+*/
 {
     var text = $(".letter").find("textarea").val();
     if(text == "")
@@ -86,6 +90,10 @@ function setContent()
 
 
 function setPostcardContent()
+/*
+check if user input anything to text area, if so, store the stamp to
+localStorage, and proceed, otherwise pop a message.
+*/
 {
     if(localStorage.getItem("stamp") == null)
     {
@@ -101,14 +109,21 @@ function setPostcardContent()
 }
 
 function setTime()
+/*
+For this prototype which will be presented on 6th of June
+store the date and selected time to localStorage
+*/
 {
-    var time = "2018-05-25 " + $("#timePicker").val();
+    var time = "2018-06-08 " + $("#timePicker").val();
     localStorage.setItem("toDate", time);
     //alert(localStorage.getItem("toDate"));
 
 }
 
 function send()
+/*
+pack all user selection and post it to data server
+*/
 {
     setTime();
     var date = new Date();
@@ -130,11 +145,10 @@ function send()
     };
 
     var json = JSON.stringify(message);
-    //alert(json);
-    //var url = "http://209.97.175.95:8080/add";
+
     $.ajax({
         type: "POST",
-        url: "http://209.97.175.95:8082",
+        url: "http://209.97.175.95:8082", 
         dataType: "text",
         data: json,
         success: function(response) {
@@ -148,6 +162,7 @@ function send()
 		}
         },
         error: function (request, status, error) {
+            alert("Failed to connect data server");
             console.log(request.status);
             console.log(error);
         }

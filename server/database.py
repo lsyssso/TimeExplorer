@@ -1,11 +1,12 @@
-#!/usr/bin/env python3
+"""
+Connect to the database by given config file
+This program is modified based on another assignment submission of mine
+"""
 
 import pg8000
 import configparser
 
-'''
-Connects to the database using the connection string
-'''
+
 def database_connect():
     # Read the config file
     config = configparser.ConfigParser()

@@ -1,3 +1,30 @@
+.picker {
+	position: absolute; 
+	top: 1330px; 
+	left: 448px; 
+	background-color: #ddccbf; 
+	width: 270px;
+	height: 40px;
+	color: #8B4513;
+}
+
+input[type="text"]
+{
+    font-size: 30px;
+	font-family: 'Andale Mono', Arial, sans-serif;
+	border-radius: 2px;
+}
+
+.typeTag
+{
+	position: absolute;
+	top: 1677px;
+	left: 630px;
+	font-family: 'Andale Mono', Arial, sans-serif;
+	color: #8B4513;
+	font-size: 32px;
+}
+
 .timer
 {position:absolute;
   width: 768px;
@@ -26,6 +53,11 @@ top: 1808.8px;
   width: 340px;
   height: 100px;
 }
+
+
+/*
+Time picker css comes with skeleton code of time pick uitilty found on http://www.17sucai.com/pins/24146.html
+*/
 .Hunter-time-picker{
 	position: absolute;
 	left: 448px;
@@ -33,7 +65,6 @@ top: 1808.8px;
 	border: 2px solid #c9cbce;
 	width: 390px;
 	background: #ddccbf;
-	/*z-index: 999999;*/
 	font-size: 0;
 }
 .Hunter-time-picker:before, .Hunter-time-picker:after{
@@ -45,12 +76,10 @@ top: 1808.8px;
 	border-style: solid;
 	position: absolute;
 	left: 20px;
-	/*z-index: 999999;*/
 }
 .Hunter-time-picker:before{
 	border-color: transparent transparent #ffffff;
 	top: -17px;
-	/*z-index: 9999999;*/
 }
 .Hunter-time-picker:after{
 	border-color: transparent transparent #CD853F;
@@ -86,7 +115,6 @@ top: 1808.8px;
 	border-bottom: 1px solid #d8d8d8;
 }
 
-/*选择小时*/
 .Hunter-time-picker .Hunter-wrap{
 	position: relative;
 	width: 100%;
@@ -154,19 +182,5 @@ top: 1808.8px;
     border-color: #CD853F;
 }
 
-.picker {
-	position: absolute; 
-	top: 1330px; 
-	left: 448px; 
-	background-color: #ddccbf; 
-	width: 270px;
-	height: 40px;
-}
 
-input[type="text"]
-{
-    font-size: 30px;
-	font-family: 'Andale Mono', Arial, sans-serif;
-	border-radius: 2px;
-}
 

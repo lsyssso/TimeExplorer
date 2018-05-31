@@ -48,8 +48,8 @@ String GRAPHICS_DIRECTORY = "graphics/";
 //The Url of data server
 String URL = "http://209.97.175.95:8082";
 
-//Three envelope colours
-String[] ENVELOPE_STYLE = new String[]{"Ivory", "Yellow", "Pink"};
+//Envelope colours
+String[] ENVELOPE_STYLE = new String[]{"Ivory", "Yellow", "Pink", "Caramel", "Purple", "Greenish", "Brown"};
 
 //For controlling which spawn location is used for next created message
 int spawnLocController = 0;
@@ -119,7 +119,7 @@ void draw()
   
   //Due the fact that Kinect will put most recent detected skeleton to the first position
   //We may run into a situation that user find Kinect lose track of them when the player number
-  //reaches the limit and a new user wants to join in.
+  //reaches the limit set by us and a new user wants to join in.
   
   //create another skeleton array, which will be the one for calculation
   ArrayList<KSkeleton> skeletonArray = new ArrayList<KSkeleton>();
@@ -130,7 +130,8 @@ void draw()
     numberOfPlayers = skeletonArrayAll.size();
   }
   
-  //pop one skeleton each iteration, from the last object from the array
+  //pop one skeleton from the end of list each time
+  //which prevents existing user being pushed out
   for(int i = 0; i < numberOfPlayers; i++)
   {
     skeletonArray.add(skeletonArrayAll.remove(skeletonArrayAll.size() - 1));
@@ -185,7 +186,7 @@ void draw()
         
         //draw the hands
         drawJoint(rightX, rightY, i, true);
-        drawJoint(leftX, leftY, i, false); //<>// //<>//
+        drawJoint(leftX, leftY, i, false); //<>//
         
         //check whether a hand is within the detection area
         if(isBetween(d.range, rightHandLoc) || isBetween(d.range, leftHandLoc))
@@ -361,7 +362,7 @@ Given a JSON string, create a Message object and add to buffer
     {
       textX = LETTER_TEXT_X;
       textY = LETTER_TEXT_Y;
-      newMsgCover = GRAPHICS_DIRECTORY + ENVELOPE_STYLE[int(random(0, 3))];
+      newMsgCover = GRAPHICS_DIRECTORY + ENVELOPE_STYLE[int(random(0, ENVELOPE_STYLE.length))];
     }
     else
     {

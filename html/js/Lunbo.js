@@ -1,3 +1,8 @@
+/*!
+ 
+An image slider found on: http://www.17sucai.com/pins/28643.html
+
+ */
 
 function LbMove(boxID,btn_left,btn_right,btnBox,Car,direction,way,moveLengh,speed,Interval,number){
 				var        _ID   = $("#"+boxID+"");

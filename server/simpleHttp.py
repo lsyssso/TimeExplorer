@@ -1,9 +1,17 @@
+"""
+This simple http server is modified based on the skeleton code found on:
+https://gist.github.com/mdonkers/63e115cc0c79b4f6b8b3a6b797e485c7
+"""
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import pg8000
 import database
 import json
 
 def all_messages():
+    """
+    Retrieve messages from database
+    """
     output = None
     try:
         conn = database.database_connect()
@@ -37,6 +45,9 @@ def all_messages():
         return output
 
 def insert_message(message):
+    """
+    Insert one message to DB
+    """
     conn = database.database_connect()
     cur = conn.cursor()
     result = ""
