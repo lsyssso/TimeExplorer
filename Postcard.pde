@@ -40,7 +40,7 @@ public class Postcard extends Message
       text(this.message, images.get(1).x + textX, images.get(1).y + textY);
       text(this.timeStamp, images.get(1).x + textX, images.get(1).y + textY + 100);
     }
-    else
+    else if(status == 0)
     {
       resetDetectionArea();
       move();
@@ -58,6 +58,12 @@ public class Postcard extends Message
         fill(0);
       } 
     } //<>//
+    else if(status < 0)
+    {
+      tint(255, opacity);
+      images.get(0).render();
+      opacity -= 1;
+    }
     tint(255, 255);
   }
 }

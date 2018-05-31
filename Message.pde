@@ -93,7 +93,7 @@ public class Message extends Drawable
       text(this.message, images.get(1).x + textX, images.get(1).y + textY);
       text(this.timeStamp, images.get(1).x + textX, images.get(1).y + textY + 200);
     }
-    else
+    else if(status == 0)
     {
       //when the message is opened, detection areas is enlarged due to the change of image size
       //so when the the message is closed, the area is reseted.
@@ -114,6 +114,12 @@ public class Message extends Drawable
         images.get(1).render();
         fill(0);
       } 
+    }
+    else if(status < 0)
+    {
+      tint(255, opacity);
+      images.get(0).render();
+      opacity -= 1;
     }
     tint(255, 255);
   }
@@ -168,5 +174,10 @@ public class Message extends Drawable
   {
     range[3] = range[2] + images.get(0).sizeHeight;
     range[1] = range[0] + images.get(0).sizeWidth;
+  }
+  
+  public void setOpacity(int newOpacity)
+  {
+    this.opacity = newOpacity;
   }
 }

@@ -69,9 +69,11 @@ boolean displayDetectionBoundary = false;
 boolean messageBufferUpdated = false;
 //To store an image showing instruction
 PImage bubble;
+
 //To store visual elements representing hand
 PImage[] hands = new PImage[3];
 
+int reloadCountDown = 255;
 
 KinectPV2 kinect;
 
@@ -105,12 +107,17 @@ void draw()
 {
   
   //refresh background
-  background(0);
+  background(20);
   //check if buffer is updated
-  if(messageBufferUpdated)
+  if(reloadCountDown > 0)
   {
-    loadFromBuffer();
+    reloadCountDown -= 1;
   }
+  if(messageBufferUpdated && reloadCountDown <= 0)
+  {
+    thread("loadFromBuffer");   
+  }
+  
   //initialize variables for calculation
   int[] rightHandLoc;
   int[] leftHandLoc;
@@ -320,6 +327,12 @@ then saving objects to the buffer
     }
     
     messageBufferUpdated = true;
+    for(Message m : detectionPoints)
+    {
+      m.setOpacity(255);
+      m.status = -1;
+    }
+    reloadCountDown = 10;
   }
   catch(Exception e)
   {
@@ -395,15 +408,6 @@ Given a JSON string, create a Message object and add to buffer
   spawnLocController = (spawnLocController + 1) % MAX_DISPLAY_NO;
 }
 
-public void loadHistoricalMessages()
-{
-  //createHistoricalMessage("It's hard to believe the old milling building has turned into this beautiful Bank building\n\nBen", "1940-05-30");
-  //createHistoricalMessage("Did they literally move the entire facade from Commercial Banking Company to here?\n\nJason", "1923-12-21");
-  //createHistoricalMessage("Look at this new Commonwealth bank!\n\nJake", "1938-08-11");
-  //createHistoricalMessage("Bank building now belongs to Pharmacy!\n\nJimmy", "1958-04-27");
-  //createHistoricalMessage("A symbolic identical representation of the scientific precinct @Bank building\n\nHayden", "1955-03-03");
-  //createHistoricalMessage("So bad that the uni can't afford new materials\n\nA hard working builder", "1923-09-15");
-}
 
 public void keyPressed()
 {
@@ -457,6 +461,6 @@ public void checkUpdate()
   {
     println("updating...");
     loadMessages();
-    delay(60000);
+    delay(300000);
   }
 }
