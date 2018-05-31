@@ -457,6 +457,6 @@ public void checkUpdate()
   {
     println("updating...");
     loadMessages();
-    delay(600000);
+    delay(60000);
   }
 }
