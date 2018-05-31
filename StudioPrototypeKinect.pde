@@ -327,12 +327,15 @@ then saving objects to the buffer
     }
     
     messageBufferUpdated = true;
+    //prepard from loading from buffer
     for(Message m : detectionPoints)
     {
       m.setOpacity(255);
+      //Move detection range to an unreachable location 
+      m.range = new int[]{-300, -300, -300, -300};
       m.status = -1;
     }
-    reloadCountDown = 10;
+    reloadCountDown = 85;
   }
   catch(Exception e)
   {

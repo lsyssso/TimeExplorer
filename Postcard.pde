@@ -62,7 +62,7 @@ public class Postcard extends Message
     {
       tint(255, opacity);
       images.get(0).render();
-      opacity -= 1;
+      opacity -= 3;
     }
     tint(255, 255);
   }

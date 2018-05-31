@@ -119,7 +119,7 @@ public class Message extends Drawable
     {
       tint(255, opacity);
       images.get(0).render();
-      opacity -= 1;
+      opacity -= 3;
     }
     tint(255, 255);
   }
