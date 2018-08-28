@@ -17,10 +17,10 @@ def all_messages():
         conn = database.database_connect()
         cur = conn.cursor()
         print("FETCHING ALL MESSAGES...")
-        cur.execute("SELECT * FROM MESSAGE ORDER BY TODATE DESC;")
+        cur.execute("SELECT * FROM MESSAGE WHERE ((now() > (todate AT TIME ZONE 'Australia/Sydney' AT TIME ZONE 'UTC'))  AND (todate AT TIME ZONE 'Australia/Sydney' AT TIME ZONE 'UTC') > (now() - INTERVAL '10 minutes')) OR (msgtype = 1) ORDER BY TODATE DESC;")
         results = cur.fetchall()
-        #print(results)
-
+        print("result fetched")
+        print(results)
         messages = [{
             'messageId': str(row[7]),
             'fromDate': str(row[0]),

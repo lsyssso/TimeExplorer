@@ -57,7 +57,7 @@ public class Postcard extends Message
         images.get(1).render();
         fill(0);
       } 
-    } //<>//
+    } //<>// //<>//
     else if(status < 0)
     {
       tint(255, opacity);

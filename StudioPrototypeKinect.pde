@@ -7,7 +7,8 @@ import KinectPV2.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Arrays;
-
+import processing.sound.*;
+SoundFile file;
 //each item specified the properties of different type of messages
 //item 0 represents the properties of modern letter
 //item 1 represents the properties of vintage letter
@@ -86,6 +87,8 @@ void setup()
   //setup font size and style
   textFont(createFont("Georgia", 20));
   frameRate(60);
+  file = new SoundFile(this, "C:\\Users\\stewa\\Desktop\\StudioPrototypeKinect\\clock.wav");
+  file.loop();
   //initialize Kinect
   kinect = new KinectPV2(this);
   kinect.enableSkeletonColorMap(true);
@@ -173,6 +176,10 @@ void draw()
   //start checking if there is hand within detection areas
   for(Message d : detectionPoints)
   {
+    if(isBetween(d.range, new int[]{mouseX, mouseY})
+    {
+      d.switchImg();
+    }
     //traverse every skeleton
     for (int i = 0; i < skeletonArray.size(); i++) {
       KSkeleton skeleton = (KSkeleton) skeletonArray.get(i);
@@ -393,7 +400,7 @@ Given a JSON string, create a Message object and add to buffer
     newMsgBack = newMsgCover + "-open.png";
     newMsgCover += ".png";
     //Create new instance of messagew
-    newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 10)), newMsgFrom, textX, textY);
+    newMsg = new Message(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 5)), newMsgFrom, textX, textY);
   }
   else //postcard
   {
@@ -403,7 +410,7 @@ Given a JSON string, create a Message object and add to buffer
     textX = POSTCARD_TEXT_X;
     textY = POSTCARD_TEXT_Y;
     newMsgCover += ".png";
-    newMsg = new Postcard(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 10)), newMsgFrom, textX, textY, newMsgStamp);
+    newMsg = new Postcard(new int[]{spawnLocX, spawnLocX + newMsgWidth, spawnLocY, spawnLocY + newMsgHeight}, newMsgMsg, int(random(2, 5)), newMsgFrom, textX, textY, newMsgStamp);
   }
   //Process the text to fit in the area
   newMsg.breakText(newMsgLineLength);
@@ -455,9 +462,16 @@ messages will be loaded
   else
   {for(int i = 0; i < quantity; i++)
     {
-      if(detectionPoints.get(i).status < 0)
+      try
       {
-        detectionPoints.set(i, messageBuffer.get(i));
+        if(detectionPoints.get(i).status < 0)
+        {
+          detectionPoints.set(i, messageBuffer.get(i));
+        }
+      }
+      catch(IndexOutOfBoundsException e)
+      {
+        detectionPoints.add(messageBuffer.get(i));
       }
     }
     
@@ -481,6 +495,6 @@ public void checkUpdate()
   {
     println("updating...");
     loadMessages();
-    delay(300000);
+    delay(60000);
   }
 }
